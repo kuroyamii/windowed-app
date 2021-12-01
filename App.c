@@ -3,29 +3,30 @@
 #elif defined(_UNICODE) && !defined(UNICODE)
 #define UNICODE
 #endif
+
 #include <Windows.h>
 
 /*Window Procedure*/
-LRESULT CALLBACK WindowProcedure(HWND hwnd, MSG msg, WPARAM wparam, LPARAM lparam);
+LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 /*Win API driver*/
-int WINAPI WinMain(HINSTANCE HInstance, HINSTANCE HPrevInstance, LPTSTR nCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE HInstance, HINSTANCE HPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     /*Declare window handler, message, window class*/
 
-    HWND hwnd;
     MSG msg;
     WNDCLASSEX winclass;
+    HWND hwnd;
 
     /*Declare window properties*/
 
+    winclass.lpszClassName = "window_class";
+    winclass.lpszMenuName = NULL;
+    winclass.lpfnWndProc = WindowProcedure;
     winclass.cbClsExtra = 0;
     winclass.cbSize = sizeof(WNDCLASSEX);
     winclass.cbWndExtra = 0;
     winclass.hbrBackground = (HBRUSH)COLOR_WINDOW;
     winclass.hInstance = HInstance;
-    winclass.lpfnWndProc = WindowProcedure;
-    winclass.lpszClassName = "window_class";
-    winclass.lpszMenuName = NULL;
     winclass.style = CS_DBLCLKS;
 
     /*Declare icon and cursor*/
@@ -35,7 +36,7 @@ int WINAPI WinMain(HINSTANCE HInstance, HINSTANCE HPrevInstance, LPTSTR nCmdLine
     winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
     /*Register window class*/
-    if (!RegisterClassEx)
+    if (!RegisterClassEx(&winclass))
     {
         return 0;
     }
@@ -56,7 +57,7 @@ int WINAPI WinMain(HINSTANCE HInstance, HINSTANCE HPrevInstance, LPTSTR nCmdLine
 
     ShowWindow(hwnd, nCmdShow);
 
-    while (GetMessage(&msg, hwnd, 0, 0))
+    while (GetMessage(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
